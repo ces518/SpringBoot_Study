@@ -61,3 +61,22 @@ public class Applicaiton {
 
 @SpringBootApplication 애노테이션을 사용해서 메인 클래스라는것을 명시해주고
 SpringApplication.run('클래스',args); 실행을하면 스프링부트 애플리케이션이 정상적으로 실행되는것을 확인할 수 있다.
+
+
+# Spring boot 프로젝트 구조
+    
+메이븐 프로젝트 구조와 동일하다.
+
+src/main/java : 소스코드
+src/main/resource : 소스 리소스 (classpath: 키워드를 사용하여 접근할 수 있다.)
+src/test/java : 테스트 코드
+src/test/resource : 테스트 리소스
+
+* 스프링부트에서 추천하는 메인클래스 경로
+    - 프로젝트에서 사용하는 가장 최상위 패키지에 두는것을 권장한다.
+    
+* 이유 
+    - 해당 클래스가 컴포넌트 스캔을 하는데 해당 패키지부터 하위패키지 탐색을 진행한다.
+    - 가장 기본 패키지를 생성하고 해당 패키지에 메인 애플리케이션 클래스를 두는것을 권장한다.
+    
+   
