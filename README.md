@@ -94,3 +94,22 @@ src/test/resource : 테스트 리소스
         - 이 방법의 경우 parent는 의존성 관리외에도 각종 프로퍼티등 설정을 지원해주는데 그런 부분들을 수동으로 해주어야함.
         
         
+# Spring boot 원리 - 의존성 관리 응용
+- spring boot starter 프로젝트를 의존성으로 추가하면 의존성 관리를 스프링부트가 제공하기때문에
+- 버전을 명시하지않아도 된다.
+- 스프링부트가 의존성을 관리해주지않는 의존성일경우 버전을 명시해주는것이 베스트프렉티스이다.
+```xml
+<!--    스프링부트 starter jpa -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+```
+
+- 스프링부트가 관리하는 의존성의 버전을 바꾸고싶은경우 ? 
+    - parent에 존재하는 엘리먼트 다음과 같이 프로퍼티 엘리먼트에 오버라이딩 해주면된다.
+```xml
+<properties>
+    <spring.version>5.0.7.RELEASE</spring.version>
+</properties>
+```
