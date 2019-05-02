@@ -113,3 +113,43 @@ src/test/resource : 테스트 리소스
     <spring.version>5.0.7.RELEASE</spring.version>
 </properties>
 ```
+
+# Spring boot 원리 - 자동 설정
+
+- @EnableAutoConfiguration (@SpringBootApplication에 포함)
+- 스프링부트는 빈을 2 단계에 걸쳐서 등록을 다.
+    - 1. ComponentScan
+    - 2. EnableAutoConfiguration
+
+1. ComponentScan
+    - @Component 애노테이션으로 등록된 객체들을 빈으로 등록한다.
+    - @Controller , @Service ... 등
+
+2. EnableAutoConfiguration
+    - spring.factories 
+        - org.springframework.boot.autoconfigure.EnableAutoConfiguration 하위에 
+        - autoConfiguration 컨벤션들이 존재한다.
+        - 해당 설정들을 모두 읽어들인다.
+        - @Conditional~ 로 시작하는 애노테이션 > 조건에 따라 설정을 제공한다.
+
+- @SpringBootApplication은 사실상 아래의 3가지 애노테이션과 동일하다.    
+- SpringBootApplication을 static 메서드가아닌 인스턴스를 생성해서 사용할경우 다양한 커스터마이징이 가능하다.
+- 다음과 같이 WebApplicationType을 NONE으로 설정할경우 , WebApplication이 아닌 애플리케이션으로 실행이 된다.
+```java
+//@SpringBootApplication
+@SpringBootConfiguration
+@ComponentScan
+@EnableAutoConfiguration
+public class Applicaiton {
+
+    public static void main(String[] args) {
+        SpringApplication application = new SpringApplication(Applicaiton.class);
+        application.setWebApplicationType(WebApplicationType.NONE);
+        application.run(args);
+//        SpringApplication.run(Applicaiton.class,args);
+    }
+}
+```
+    
+    
+    
