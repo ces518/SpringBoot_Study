@@ -153,3 +153,98 @@ public class Applicaiton {
     
     
     
+# Spring boot 원리 - Custom AutoConfiguration
+- Xxx-Spring-Boot-AutoConfigure : 자동설정
+- Xxx-Spring-Boot-Starter : 필요한 의존성 정의
+
+- 하나로 만들고 싶은경우 ? 
+    - Xxx-Spring-Boot-Starter
+
+구현방법
+    - 의존성추가
+        
+```xml
+<!--    자동설정 을 위한 autoconfigure , autoconfigure processor 의존성 추가 -->
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure-processor</artifactId>
+        </dependency>
+    </dependencies>
+
+<!-- dependencyManagement 설정 -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>2.0.4.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+```        
+        
+    - @Configuration 클래스 작성
+```java
+@Configuration
+public class HolomanConfiguration {
+
+    @Bean
+    public HoloMan holoMan() {
+        HoloMan holoMan = new HoloMan();
+        holoMan.setHowLong(100);
+        holoMan.setName("june");
+        return holoMan;
+    }
+}
+```    
+    - src/main/resources/META-INF/spring.factories 작성
+        - spring.factories 파일은 스프링부트에 한정적인 것이아닌 스프링 라이프사이클에 포함되는 파일 (serviceProvider 같은 패턴)
+```properties
+    org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+       me.june.HolomanConfiguration
+
+```
+    - mvn install (다른 프로젝트에서 사용할 수 있도록 빌드하여 jar로 생성한다. [로컬메이븐 저장소로 설치가됨.])
+    - 다음으로 사용할 프로젝트의 의존성으로 추가해준다.
+```xml
+<!--   커스텀한 자동설정 -->
+<dependency>
+    <groupId>me.june</groupId>
+    <artifactId>june-spring-boot-starter</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
+```    
+    - 자동설정으로 인해 빈이 등록되었는지 확인
+```java
+@Component
+public class AppRunner implements ApplicationRunner {
+
+    @Autowired
+    HoloMan holoMan;
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        System.out.println(holoMan);
+        //HoloMan{name='june', howLong=100}
+    }
+}
+```
+    - 현재 프로젝트에서 새롭게 빈을 등록
+    - AppRunner 를 통해 나오는 기대값은 ?  HoloMan{name=null, howLong=0}
+    - 하지만 실제 출력값은 HoloMan{name='june', howLong=100}
+    - 이유는 앞서 설명한 Spring-boot 의 configure 사이클때문 ..
+    - ComponentScan을 통해 현재 프로젝트에서 새로이 등록한 holoman을 등록후 , AutoConfiguration을 진행하기때문에 autoConfigure프로젝트에 등록된 빈이 덮어써버리는것이다. 
+```java
+@Bean
+public HoloMan holoMan() {
+    return new HoloMan();
+}
+```
