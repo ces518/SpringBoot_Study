@@ -248,3 +248,79 @@ public HoloMan holoMan() {
     return new HoloMan();
 }
 ```
+
+
+# Spring boot 원리 - 커스텀 자동 설정
+    - 덮어쓰기 방지하기
+        - 자동설정 프로젝트에 @ConditionalOnMissingBean 애노테이션 사용
+        - 해당 타입의 빈이 없을 경우에만 빈을 등록하도록 설정 (ComponentScan으로 등록되는 빈을 우선)
+        - 스프링 부트의 자동설정을 커스터마이징 하는 방법중 하나.
+```java
+@Component
+public class AppRunner implements ApplicationRunner {
+
+    @Autowired
+    HoloMan holoMan;
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        System.out.println(holoMan);
+        //HoloMan{name='null', howLong=0}
+    }
+}
+```
+
+    - 매번 새롭게 정의하는것이 번거롭기 때문에 properties 파일을 활용하는 방법이 존재한다.
+    - 먼저 자동설정 프로젝트에 해당하는 설정을 properties파일을 활용하도록 변경
+
+```properties
+holoman.name=june
+holoman.howlong=1000
+```
+        
+```java
+@ConfigurationProperties("holoman")
+public class HolomanProperties {
+
+    private String name;
+    private Long howlong;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getHowlong() {
+        return howlong;
+    }
+
+    public void setHowlong(Long howlong) {
+        this.howlong = howlong;
+    }
+}
+
+@Configuration
+/**
+ * Properties로 설정하는 클래스를 import한다
+ */
+@EnableConfigurationProperties(HolomanProperties.class)
+public class HolomanConfiguration {
+
+    /**
+     * 해당 타입의 빈이 없을때만 빈을 등록하도록 설정
+     * @return
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public HoloMan holoMan(HolomanProperties properties) {
+        HoloMan holoMan = new HoloMan();
+        holoMan.setHowLong(properties.getHowlong());
+        holoMan.setName(properties.getName());
+        return holoMan;
+    }
+}
+```
+- 실제 사용하는 프로젝트에서는 빈을 재정의 할 필요없이 , properties만 재정의 해주면 된다.

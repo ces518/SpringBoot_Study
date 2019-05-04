@@ -27,8 +27,4 @@ public class Applicaiton {
 //        SpringApplication.run(Applicaiton.class,args);
     }
 
-    @Bean
-    public HoloMan holoMan() {
-        return new HoloMan();
-    }
 }
