@@ -324,3 +324,42 @@ public class HolomanConfiguration {
 }
 ```
 - 실제 사용하는 프로젝트에서는 빈을 재정의 할 필요없이 , properties만 재정의 해주면 된다.
+
+# Spring boot 원리 - 내장 서버의 이해
+- 스프링 부트는 웹서버가 아니다.
+    - Tomcat , Netty , Jetty , Undertow 등 을 사용할 수 있도록 자바코드로 제공한다.
+
+```java
+        // 톰캣 객체생성
+        Tomcat tomcat = new Tomcat();
+        // 톰캣 포트설정
+        tomcat.setPort(8080);
+        // 컨텍스트 설정
+        Context context = tomcat.addContext("/", "/");
+
+        HttpServlet servlet = new HttpServlet() {
+            @Override
+            protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+                PrintWriter writer = resp.getWriter();
+                writer.println("<html><head><title>HelloTomcat</title></head>");
+                writer.println("<body>Hello !!! </body></html>");
+            }
+        };
+
+
+        // 톰캣에 서블릿 추가
+        tomcat.addServlet("/","hello",servlet);
+        // 컨텍스트에 서블릿매핑 추
+        context.addServletMappingDecoded("/hello","hello");
+
+        // 톰캣실행
+        tomcat.start();
+
+        tomcat.getServer().await();
+
+```
+
+- 이 모든 내장 톰캣 설정이 스프링부트의 자동설정에서 유연하게 제공해준다.
+- ServletWebServerFactoryAutoConfiguration.class에 의해 설정이된다.
+    - TomcatServletWebServerFactoryCustomizer (서버 커스터마이징)
+- DispatcherServletAutoConfiguration - 디스패처서블릿 자동설정    
