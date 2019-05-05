@@ -363,3 +363,61 @@ public class HolomanConfiguration {
 - ServletWebServerFactoryAutoConfiguration.class에 의해 설정이된다.
     - TomcatServletWebServerFactoryCustomizer (서버 커스터마이징)
 - DispatcherServletAutoConfiguration - 디스패처서블릿 자동설정    
+
+
+# Spring boot 원리 - 내장 서버 응용
+- Spring boot 는 기본적으로 Tomcat을 내장서버로 자동 설정된다.
+- 다른 서블릿 컨테이너로 변경도 가능하다.
+    - 언더토우로 변경하는 방법
+    - 1. spring-boot-start-web에는 기본적으로 tomcat이 함께 의존성으로 들어오기때문에 해당 부분을 제외시켜주어야한다.
+    - 2. 그런다음 jetty , netty 등 사용하고싶은 starter 프로젝트를 의존성으로 추가하면 해당 웹서버로 구동이 가능하다.
+```xml
+<!--   스프링부트 웹 의존성  -->
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+<!--           톰캣을 기본 의존성에서 제거  -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+<!--        언더토우 내장 서버 로 의존성 추가 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-undertow</artifactId>
+        </dependency>
+```
+- 의존성으로 웹서버가 존재 한다면 스프링 부트는 기본적으로 웹 어플리케이션으로 실행한다.
+
+- 스프링부트의 다양한 웹서버 설정 방법
+    - properties 파일을 활용하여 , 포트 등 다양한 웹서버 설정을 변경 가능하다.
+```properties
+## 스프링을 웹애플리케이션이 아닌타입으로 실행
+#spring.main.web-application-type=none
+
+## 스프링 웹서버의 포트변경
+#server.port=7070
+
+## 스프링 웹서버의 포트를 랜덤으로 지정
+server.port=0
+
+```
+
+- 스프링 부트 웹서버가 초기화되었을때 콜백되는 이벤트 리스너 설정
+- 스프링 부트에서 권장하는 베스트프렉티스이다.
+```java
+@Component
+//ServletWebServerInitializedEvent < WebServer가 초기화가되면 해당 이벤트에대한 콜백이 이루어짐
+public class PortListener implements ApplicationListener<ServletWebServerInitializedEvent> {
+
+    @Override
+    public void onApplicationEvent(ServletWebServerInitializedEvent servletWebServerInitializedEvent) {
+        ServletWebServerApplicationContext applicationContext = servletWebServerInitializedEvent.getApplicationContext();
+        System.out.println(applicationContext.getWebServer().getPort());
+    }
+}
+```
