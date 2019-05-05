@@ -421,3 +421,60 @@ public class PortListener implements ApplicationListener<ServletWebServerInitial
     }
 }
 ```
+
+
+# Spring boot 원리 - 내장 웹서버에 https, http2 적용하기
+
+
+#### https 적용하기
+1. SSL 인증서를 생성한다.
+```
+keytool -genkey -alias spring -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 4000
+
+```
+2. 인증서에 대한 정보들을 application.properties에 추가
+```properties
+server.ssl.key-store=keystore.p12
+server.ssl.key-store-type=PKCS12
+server.ssl.key-store-password=123456
+server.ssl.key-alias=spring
+```
+
+다음과 같이 curl 명령어로 접근해보면 접근이 되지않고 안내문구가 나오게 된다.
+- 그이유는 SSL인증서를 로컬에서 생성했기때문에 pubKey정보를 모르기때문 ...
+- -k 옵션을줘서 무시하면 200 코드와 함께 접근이 가능해진다.
+```
+curl -I --http2 https://localhost:8080
+curl -I -k --http2 https://localhost:8080 
+```
+
+- 스프링부트는 커넥터를 하나만 사용하는데 해당커넥터에 SSL을 적용해준다.
+- 적용 후에는 모든 요청이 https로만 가능해진다.
+- https 와 http 모두 받고싶다면 ? 커넥터를 추가해주어야한다.
+
+다음과 같이 Bean으로 TomcatServletWebServerFactory로 커넥터를 생성하여 등록해주고나면
+https 와 http 요청 모두 받을 수 있다.
+```java
+    @Bean
+    public ServletWebServerFactory servletWebServerFactory () {
+        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
+        tomcat.addAdditionalTomcatConnectors(createStandardConnector());
+        return tomcat;
+    }
+
+    private Connector createStandardConnector() {
+        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        connector.setPort(8080);
+        return connector;
+    }
+```
+
+#### http2 설정하기
+- http2를 사용하려면 기본적으로 https가 적용되어있어야한다.
+- tomcat 8.5 에서는 추가적인 설정이 필요한데 상당히 복잡하기 떄문에 추천하지않는다.
+- 버전을 9버전 으로 올리는것을 추천..
+```properties
+# http2를 지원하는 설정 (undertow는 https설정이 되어있다면 추가적인 설정이 필요가없다.)
+# tomcat 8.5 Version 에서는 추가적인 설정이필요하지만 매우 복잡하다 tomcat 9 로 올리는것을 추천..
+server.http2.enabled=true
+```
