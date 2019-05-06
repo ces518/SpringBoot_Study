@@ -496,3 +496,23 @@ server.http2.enabled=true
         - org.springframework.boot.loader.Launcher : 애플리케이션의 mainClass를 실행한다.
 
 모든 jar파일의 시작은 manifest의 mainClass (자바 기본 스펙)
+
+
+#### Spring boot 원리 정리
+
+- 의존성 관리
+    - parent 가 스프링 부트 의존성 관리의 핵심
+    - 스프링부트가 관리하는 주요라이브러리의 버전들
+    - spring-boot-starter 프로젝트는 스프링부트가 의존성을 관리하는 프로젝트
+    - parent로 받는방법과 denpendencyManagement로 받는것과는 큰 차이가 있다.
+    
+- 자동 설정
+    - 스프링부트는 빈을 두단계에 거쳐서 등록한다.
+    - @ComponentScan 
+    - @EnableAutoConfiguration
+    - @Conditional...
+
+- 내장 웹서버
+    - 독립적으로 실행가능한  웹 애플리케이션을 제공함.
+    - 스프링부트는 웹서버가 아니다.
+    - 웹서버를 자동설정으로 인해 웹서버를 내장으로 사용할 뿐이다.
