@@ -478,3 +478,21 @@ https 와 http 요청 모두 받을 수 있다.
 # tomcat 8.5 Version 에서는 추가적인 설정이필요하지만 매우 복잡하다 tomcat 9 로 올리는것을 추천..
 server.http2.enabled=true
 ```
+
+
+#### 실행가능한 JAR
+- spring boot maven plugin 에 관련된 이야기
+    - mvn package 명령어를 실행하면 , 실행가능한 JAR파일이 생성된다.
+    - spring boot maven plugin 이 해주는 일이다.
+    - 앱에 필요한 의존성 들도 같이 jar파일 하나에 같이 들어간다.
+    - Java에는 내장 Jar를 읽는 표준이 없다.
+    - 과거에는 uber jar를 사용했다.
+        - 모든 클래스를 하나로 압축하는 방법을 채택
+        - 어떤 라이브러리를 사용하는지 알 수 없다
+        
+    - 스프링부트 전략
+        - 애플리케이션과 라이브러리를 구분
+        - org.springframework.boot.loader.jar.JarFile : 내장 jar파일들을 읽어들인다.
+        - org.springframework.boot.loader.Launcher : 애플리케이션의 mainClass를 실행한다.
+
+모든 jar파일의 시작은 manifest의 mainClass (자바 기본 스펙)
