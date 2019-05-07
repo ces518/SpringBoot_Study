@@ -516,3 +516,77 @@ server.http2.enabled=true
     - 독립적으로 실행가능한  웹 애플리케이션을 제공함.
     - 스프링부트는 웹서버가 아니다.
     - 웹서버를 자동설정으로 인해 웹서버를 내장으로 사용할 뿐이다.
+
+
+#### Spring boot 활용 - Spring Application
+- Spring Application
+    - 기본 로그레벨은 Info 레벨이다.
+  
+다음은 일반적인 스프링부트 애플리케이션이다.
+아래처럼 static메서드를 활용하여 스프링부트 애플리케이션을 실행할경우 
+SpringApplication 클래스가 제공하는 다양한 커스터마이징을 활용하기가 어렵기때문에
+SpringApplication 클래스의 인스턴스를 생성하여 실행 해야한다.
+
+```java
+@SpringBootApplication
+public class Applicaiton {
+
+    public static void main(String[] args){
+        SpringApplication.run(Applicaiton.class,args);
+        //SpringApplication application = new SpringApplication();
+        //application.run(args);
+    }
+}
+```
+
+- spring boot application 실행시 ,vm옵션으로 -Ddebug 또는 program argument로 --debug옵션을 주게되면 디버그모드로 애플리케이션이 동작을한다.
+- 로그레벨도 Debug레벨도 동작한다.
+- 애플리케이션 실행시 출력되는 Debug 로그는 스프링부트가 제공하는 자동설정중 어떠한 설정이 자동설정되었는지, 혹은 어떤 자동설정이 되지않았는지를 알 수 있다.
+ 
+ 
+- Spring boot FailureAnalyers
+    - FailureAnalyers는 스프링 애플리케이션 실행중 에러가 발생했을때 해당 에러메시지를 좀더 깔끔하고 보기 쉽게 출력하도록 도와준다.
+    - 스프링부트는 기본적으로 몇몇 FailureAnalyers가 등록되어있으며 직접 등록할수도있다.
+    
+    
+- Spring boot banner
+    - 애플리케이션 실행시 보이는 배너를 커스터마이징 할 수있다.
+    - src > main > resources > banner.txt || gif || png || jpg 배너파일을 위치시키면 스프링부트 애플리케이션 실행시 해당 배너가 출력된다.      
+    - 스프링의 버전 등을 출력할 수 있는 변수들을 제공한다.
+    - ${spring-boot.version} 등 ..
+    - 일부 변수는 MANIFEST파일이 생성되어야 출력가능하다.
+    - 배너를 끄고싶은경우 다음과 같이 애플리케이션 실행시 옵션을 줄수있다.
+    
+```java
+@SpringBootApplication
+public class Applicaiton {
+
+    public static void main(String[] args){
+        SpringApplication application = new SpringApplication();
+         //배너를 끄고싶은 경우
+        application.setBannerMode(Banner.Mode.OFF);
+        application.run(args);
+    }
+}
+```
+
+
+- Spring Application Builder 클래스를 활용하여 빌더패턴을 사용할 수도있다.
+
+```java
+@SpringBootApplication
+public class Applicaiton {
+
+    public static void main(String[] args){
+        new SpringApplicationBuilder()
+                    .sources(Applicaiton.class)
+                    .run(args);
+    }
+}
+```
+
+- SpringBootApplication을 실행하는 방법은 총 3가지이다.
+    - 1. SpringApplication.run() 을 활용 하는방법
+    - 2. SpringApplication의 인스턴스를 생성하여 실행하는방법
+    - 3. SpringApplicationBuilder를 활용 하는방법
+    - static 메서드를 사용하는 방법의 경우에는 스프링 부트 애플리케이션을 커스터마이징 할수 없으므로 주의

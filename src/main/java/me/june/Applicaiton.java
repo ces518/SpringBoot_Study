@@ -1,7 +1,9 @@
 package me.june;
 
+import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,8 +21,13 @@ public class Applicaiton {
 //        SpringApplication application = new SpringApplication(Applicaiton.class);
 //        application.setWebApplicationType(WebApplicationType.NONE);
 //        application.run(args);
-        SpringApplication.run(Applicaiton.class,args);
-
+        SpringApplication application = new SpringApplication(Applicaiton.class);
+        //배너를 끄고싶은 경우
+        application.setBannerMode(Banner.Mode.OFF);
+        application.run(args);
+//        new SpringApplicationBuilder()
+//                    .sources(Applicaiton.class)
+//                    .run(args);
 //        // 톰캣 객체생성
 //        Tomcat tomcat = new Tomcat();
 //        // 톰캣 포트설정
