@@ -24,6 +24,7 @@ public class Applicaiton {
         SpringApplication application = new SpringApplication(Applicaiton.class);
         //배너를 끄고싶은 경우
         application.setBannerMode(Banner.Mode.OFF);
+//        application.addListeners(new SimpleListener());
         application.run(args);
 //        new SpringApplicationBuilder()
 //                    .sources(Applicaiton.class)

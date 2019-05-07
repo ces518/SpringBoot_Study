@@ -589,4 +589,59 @@ public class Applicaiton {
     - 1. SpringApplication.run() 을 활용 하는방법
     - 2. SpringApplication의 인스턴스를 생성하여 실행하는방법
     - 3. SpringApplicationBuilder를 활용 하는방법
-    - static 메서드를 사용하는 방법의 경우에는 스프링 부트 애플리케이션을 커스터마이징 할수 없으므로 주의
+    - static 메서드를 사용하는 방법의 경우에는 스프링 부트 애플리케이션을 커스터마이징 할수 없으므로 주
+
+
+
+- Spring 에서 제공해주는 ApplicationEvent가 존재한다.
+    - 이벤트의 다양한 시점이 존재한다.
+        - ex) 애플리케이션 구동 후 , 애플리케이션 준비완료, 실패 등등 ..
+
+- 이벤트 리스너 사용시 주의점
+    - 애플리케이션 리스너의 이벤트 발생시점이 중요하다.
+    
+    - 애플리케이션 컨텍스트가 생성 된 후 이벤트일 경우
+        - 리스너를 생성한뒤 빈으로 등록되어있다면 , 해당 이벤트가 발생시 이벤트리스너가 콜백된다.
+    - 애플리케이션 컨텍스트가 생성되기 이전의 이벤트일 경우
+        - 빈으로 등록하더라도 해당 이벤트가 발생하여도 리스너가 동작하지않는다. 
+        - 이러한 경우에는 직접 등록을 해주어야한다.
+```java
+/**
+* 애플리케이션 리스너 등록 
+* " 애플리케이션 이벤트 발생시점에 주의 할것 " 
+*/
+// 애플리케이션 컨텍스트 생성이전의 이벤트일경우 필요가 없다.
+//@Component
+public class SimpleListener implements ApplicationListener<ApplicationStartingEvent> {
+
+    @Override
+    public void onApplicationEvent(ApplicationStartingEvent applicationStartingEvent) {
+        System.out.println("app is started !!");
+    }
+}
+@SpringBootApplication
+public class Applicaiton {
+
+    public static void main(String[] args){
+        SpringApplication application = new SpringApplication();
+        // 애플리케이션 컨텍스트 생성이전의 이벤트일경우 다음과 같이 수동으로 등록을 해주어야한다.
+        application.addListeners(new SimpleListener());
+        application.run(args);
+    }
+}
+```
+
+- WebApplicationType 설정
+    - 스프링부트 애플리케이션의 타입은 NONE, SERVLET , REACTIVE 로 크게 3가지로 분류한다.
+        - spring-web-mvc가 존재한다면 기본적으로 SERVLET으로 실행
+        - webflux가 존재한다면 (servlet이 없을경우) REACTIVE로 실행한다 
+        
+- 애플리케이션 아규먼트 사용하기
+    - 애플리케이션 실행시 --옵션 으로 들어오는 경우 (program arguments)
+
+- 애플리케이션 실행후 무언가를 실행하고 싶은경우
+    - ApplicationRunner (추천)
+        - ApplicationArguments (추상화된 API를 사용하여 코딩이 가능함) 를 인자로 받는다.
+    - CommandLineRunner 
+        - String[] 타입으로 인자를 받는다.
+    - @Order 로 순서를 지정할 수 있다. (숫자가 낮을수록 우선순위가 높다.)
