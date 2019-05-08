@@ -645,3 +645,146 @@ public class Applicaiton {
     - CommandLineRunner 
         - String[] 타입으로 인자를 받는다.
     - @Order 로 순서를 지정할 수 있다. (숫자가 낮을수록 우선순위가 높다.)
+
+
+# Spring boot 활용 - 외부설정
+- 사용가능한 외부설정
+    - properties
+    - yaml
+    - 환경변수
+    - 커맨드라인 아규먼트
+    
+#### properties
+- 스프링부트에서 properties를 사용한 외부설정의 경우 application.properties파일을 이용하는것이 일반적이다.
+
+사용방법
+- 먼저 properties파일에 사용하고자하는 properties를 정의한다.
+```properties
+# properties를 이용한 외부설정
+me.june.name=JuneYongPark
+```
+
+- 가장 기본적이고 쉽게 properties를 사용하는방법
+> org.springframework.beans.factory.annotation.Value 애노테이션을 활용
+```java
+@Component
+public class SimpleListener implements ApplicationListener<ApplicationStartedEvent> {
+
+    @Value("${me.june.name}")
+    private String name;
+
+    @Override
+    public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
+        System.out.println(String.format("name = {%s}", name));
+    }
+}
+// 실행결과
+// name = {JuneYongPark}
+```
+
+#### 프로퍼티 우선순위
+1. 홈 디렉토리에 존재하는 spring-boot-dev-tools.properties
+2. 테스트에 존재하는 @TestPropertySource
+3. @SpringBootTest 애노테이션의 properties 애트리뷰트
+4. 커맨트라인 아규먼트
+5. SPRING_APPLICATION_JSON (환경변수 혹은 시스템 프로퍼티) 에 존재하는 프로퍼티
+6. ServletConfig 파라메터
+7. ServletContext 파라메터
+8. java:comp/env JNDI 애트리뷰트
+9. System.getProperty() 자바 시스템 프로퍼티
+10. OS 환경변수
+11. RandomValuePropertySource
+12. JAR 밖에 존재하는 특정 프로파일의 application.properties
+13. JAR 안에 존재하는 특정 프로파일의 application.properties
+14. JAR 밖에 존재하는 application.properties
+15. JAR 안에 존재하는 application.properties
+16. @PropertySource
+17. 기본 프로퍼티
+> 우선순위가 높은 프로퍼티로 오버라이딩이 된다.
+- 모든 Property들은 Environment 객체를 활용하여 사용할 수 있다.
+
+* Test 를 실행할시 일어나는 일
+    - 1. src 하위를 빌드한다.
+    - 2. test 하위를 빌드한다.
+    - 3. test/resources/application.properties가 존재한다면 , test/하위에 존재하는 properties로 오버라이딩 된다.
+
+* Test용 properties를 사용할때 주의할점
+    - src 디렉터리를 먼저 빌드하고 test 디렉터리를 빌드하는데
+    - src 에 존재하는 properties에는 존재하지만 , test 에 존재하는 properties에는 존재하지않는 프로퍼티가 있고 , 그 값을 참조하는 경우 예외가 발생한다.
+    - 잠정적 버그를 발생시킬 여지가 있음.
+
+* properties 파일 내에서 Random값을 사용하는 방법
+- random 이라는 변수가 존재하고 , 범위값도 정해줄 수 있다.
+
+* server.port 에는 random을 사용하지 말아야 하는 이유 ?
+    - server.port=0이 랜덤값을 지정해주는데 , random 변수를 사용하는것과 무엇이 다를까 ?
+    - server.port=0 으로 랜덤값을 주는경우에는 포트번호를 가용가능한 범위 내에서 랜덤값을 부여하지만
+    - random 변수는 그것을 고려하지않은 랜덤값을 부여한다.
+    - root 권한이 필요한 포트 등을 고려하지않음
+```properties
+me.june.age=${random.int}
+
+#port랜덤 지정
+server.port=0
+``` 
+
+* SpringBootTest의 propertie 애트리뷰트를 활용한 방법
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Applicaiton.class, properties = "me.june.name=June0")
+public class TestApplication {
+
+    @Autowired
+    Environment environment;
+
+    @Test
+    public void SpringBootTest의_properties_애트리뷰트를활용한_properties_오버라이딩() {
+        String property = environment.getProperty("me.june.name");
+        assertThat(property).isEqualTo("June0");
+    }
+}
+// 실행 결과
+// 테스트 통과
+```
+
+* @TestPropertySource 애노테이션을 활용하는 방법
+- properties 애트리뷰트로 직접 오버라이딩하거나 ,location으로 properties파일을 명시할 수 있다.
+```java
+@RunWith(SpringRunner.class)
+@TestPropertySource(properties = "me.june.name=JuneZero")
+@SpringBootTest(classes = Applicaiton.class, properties = "me.june.name=June0")
+public class TestApplication {
+
+    @Autowired
+    Environment environment;
+
+    @Test
+    public void SpringBootTest의_properties_애트리뷰트를활용한_properties_오버라이딩() {
+        String property = environment.getProperty("me.june.name");
+        assertThat(property).isEqualTo("June0");
+        //실패
+    }
+
+    @Test
+    public void TestPropertySource의_우선순위가_더높다() {
+        String property = environment.getProperty("me.june.name");
+        assertThat(property).isEqualTo("JuneZero");
+        //성공
+    }
+}
+```
+
+* placeHolder 기능
+- properties 파일 내부에서 정의한 변수의 경우에는 다음 라인부터 해당 변수를 재사용 할 수 있다.
+```properties
+me.june.name=JuneYoung
+me.june.fullName= ${me.june.name} Park
+```
+
+* application.properties 사용시 주의점
+    - classpath 하위에 존재한다면 덮어 쓰기때문에 application.properties를 다른곳에 위치할 수 있다.
+    - 1. projectRoot/config 하위
+    - 2. projectRoot
+    - 3. classpath:/config 하위
+    - 4. classpath:하위
+    - 숫자가 클수록 우선순위가 높다.
