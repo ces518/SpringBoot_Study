@@ -788,3 +788,84 @@ me.june.fullName= ${me.june.name} Park
     - 3. classpath:/config 하위
     - 4. classpath:하위
     - 숫자가 클수록 우선순위가 높다.
+
+
+#### 타입세이프 프로퍼티 @ConfigurationProperties
+    - 여러 프로퍼티를 묶어서 불러올수 있다.
+    - java bean spec을 따라서 프로퍼티값들을  바인딩을 해주기때문에 getter setter가 필요함.
+빈으로 등록해서 다른 빈에 주입이 가능하다
+- @EnableConfigurationProperties
+    - @ConfigurationProperties 를 사용하는 클래스들을 활성화
+    - 이미 등록되어 있기 활성화 애노테이션이 등록되어있기 때문에 해당 클래스들을 빈으로 등록해주기만 하면된다.
+```java
+// 하단 애노테이션에 알림이 뜨는경우
+// > 해당 메타정보를 기반으로 자동완성을 제공해주는 플러그인을 추가하라는 알림
+@Component
+@ConfigurationProperties("me.june")
+public class JuneYoungProperties {
+
+    private String name;
+
+    private int age;
+
+    private String fullName;
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+}
+```
+
+@ConfigurationProperties 동작 테스트
+```java
+@Component
+public class SimpleListener implements ApplicationListener<ApplicationStartedEvent> {
+
+    @Value("${me.june.name}")
+    private String name;
+
+    @Value("${me.june.fullName}")
+    private String fullName;
+
+    //ConfigurationProperties 활용한 출력
+    @Autowired
+    private JuneYoungProperties juneYoungProperties;
+
+    @Override
+    public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
+        System.out.println(String.format("name = {%s}", name));
+        System.out.println(String.format("fullName = {%s}", fullName));
+
+        System.out.println("================= using ConfigurationProperties =================");
+        System.out.println(String.format("name = {%s}", juneYoungProperties.getName()));
+        System.out.println(String.format("fullName = {%s}", juneYoungProperties.getFullName()));
+    }
+}
+// 실행결과
+//name = {JuneYoung}
+//fullName = {JuneYoung Park}
+//================= using ConfigurationProperties =================
+//name = {JuneYoung}
+//fullName = {JuneYoung Park}
+```
