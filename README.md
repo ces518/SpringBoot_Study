@@ -869,3 +869,132 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
 //name = {JuneYoung}
 //fullName = {JuneYoung Park}
 ```
+
+* Relexed Binding
+- camel-case로 작성하지않고 , kebab-case or underscore-case로 작성하여도 바인딩을 해준다.
+
+* Type-Conversion 지원
+- 스프링 프레임워크가 지원하는 컨버전을 활용해서 타입 컨버전이 일어남.
+- @Duration Unit (스프링부트가 지원하는 컨버전)
+    - 특정 시간단위 로 받고싶을경우 바인딩을 지원한다.
+```java
+@DurationUnit(ChronoUnit.SECONDS)
+private Duration secound = Duration.ofSeconds(30);
+```    
+- @Duration 애노테이션을 사용하지않아도 properties에 값을 할당할때
+- s,ms 등 suffix를 통해 Duration으로 바인딩 할수 있도록 지원한다.
+
+```properties
+# properties를 이용한 외부설정
+me.june.name=JuneYoung
+me.june.age=100
+me.june.fullName= ${me.june.name} Park
+me.june.secound=100s
+```
+
+```java
+@Component
+@ConfigurationProperties("me.june")
+public class JuneYoungProperties {
+
+    private String name;
+
+    private int age;
+
+    private String fullName;
+
+//    @DurationUnit(ChronoUnit.SECONDS)
+    private Duration secound = Duration.ofSeconds(30);
+
+    public Duration getSecound() {
+        return secound;
+    }
+
+    public void setSecound(Duration secound) {
+        this.secound = secound;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+}
+```
+- 상단의 설정과 동일한 결과가 나타난다. 
+
+
+* 프로퍼티 값 검증
+- 프로퍼티값이 바인딩 될때 검증이 가능하다.
+- 상단에 @Validated 애노테이션을 선언하고, 검증하고싶은 필드상단에 JSR-303 애노테이션 (구현체는 hibernate-validator) 를 활용하여 검증을 할 수 있다.
+- FailureAnaylizer 가 에러메시지를 보기좋게 포매팅하여 보여준다.
+```java
+@Component
+@ConfigurationProperties("me.june")
+@Validated
+public class JuneYoungProperties {
+
+    @NotEmpty
+    private String name;
+
+    private int age;
+
+    private String fullName;
+
+//    @DurationUnit(ChronoUnit.SECONDS)
+    private Duration secound = Duration.ofSeconds(30);
+
+    public Duration getSecound() {
+        return secound;
+    }
+
+    public void setSecound(Duration secound) {
+        this.secound = secound;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+}
+```
+
+* @Value 을 사용할경우 ...
+    - SpEL을 지원한다.

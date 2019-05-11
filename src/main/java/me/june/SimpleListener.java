@@ -42,5 +42,6 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
         System.out.println("================= using ConfigurationProperties =================");
         System.out.println(String.format("name = {%s}", juneYoungProperties.getName()));
         System.out.println(String.format("fullName = {%s}", juneYoungProperties.getFullName()));
+        System.out.println(String.format("seound = {%s}",juneYoungProperties.getSecound()));
     }
 }
