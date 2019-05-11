@@ -32,6 +32,9 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
     @Autowired
     private JuneYoungProperties juneYoungProperties;
 
+    @Autowired
+    private String hello;
+
     @Override
 //    public void onApplicationEvent(ApplicationStartingEvent applicationStartingEvent) {
     public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
@@ -43,5 +46,8 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
         System.out.println(String.format("name = {%s}", juneYoungProperties.getName()));
         System.out.println(String.format("fullName = {%s}", juneYoungProperties.getFullName()));
         System.out.println(String.format("seound = {%s}",juneYoungProperties.getSecound()));
+
+        System.out.println("===================== profile Test =====================");
+        System.out.println(hello);
     }
 }

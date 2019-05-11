@@ -998,3 +998,73 @@ public class JuneYoungProperties {
 
 * @Value 을 사용할경우 ...
     - SpEL을 지원한다.
+
+
+# Spring-boot 활용 - 프로파일
+
+@Profile 애노테이션
+    - 스프링 프레임워크에서 지원해주는 기능
+    - 특정 프로파일에서만 빈을 등록하고싶다 .. 등등 에서 활용
+    - @Configuration
+    - @Component
+
+각 프로파일별로 설정파일 작성
+```java
+@Profile("prod")
+@Configuration
+public class BaseConfiguration {
+
+    @Bean
+    public String hello() {
+        return "Hello Prod!";
+    }
+}
+
+@Profile("test")
+@Configuration
+public class TestConfiguration {
+
+    @Bean
+    public String hello() {
+        return "Hello Test!";
+    }
+}
+```
+
+properties 파일에 활성화할 프로파일을 정의
+```properties
+# 프로파일 활성화
+spring.profiles.active=prod
+
+```
+
+* profiles도 properties의 우선순위에 영향을 받는다.
+- java -jar 옵션으로 실행시 커맨드라인 아규먼트가 우선순위가 더 높으므로 실행시 profiles을 지정하여 실행이 가능함.
+```
+// maven package 
+mvn clean package
+
+// prod 프로파일로 애플리케이션 실행
+jar -jar example.jar --spring.profiles.active=prod  
+```
+
+* profile용 properties도 생성이 가능하다.
+    - application-{profile}.properties 의 명으로 작성이 가능하다.
+    - profile용 properties파일이 기본 properties파일보다 우선순위가 높기때문에 해당하는 profile의 properties로 오버라이딩된다.
+
+* properties 내에서 특정 프로파일 설정을 포함시키는 방법
+    - spring.profiles.include=프로파일명
+```properties
+# properties를 이용한 외부설정
+me.june.name=prod
+me.june.age=100
+me.june.fullName= ${me.june.name} Park
+me.june.secound=100s
+
+
+# 프로파일 활성화
+spring.profiles.active=prod
+
+# 프로파일 설정 포함
+spring.profiles.include=proddb
+```

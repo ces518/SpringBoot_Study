@@ -20,7 +20,6 @@ import java.time.temporal.ChronoUnit;
 @Validated
 public class JuneYoungProperties {
 
-    @NotEmpty
     private String name;
 
     private int age;
