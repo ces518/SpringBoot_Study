@@ -1068,3 +1068,35 @@ spring.profiles.active=prod
 # 프로파일 설정 포함
 spring.profiles.include=proddb
 ```
+
+
+# Spring boot 활용 - 로깅
+- 스프링부트는 Commons Logging을 사용한다
+- 스프링 코어에서 Commons Logging 에서 사용하기때문에 사용..
+- SLF4J를 사용하려면 의존성 설정을 잘해주어야함 ... 
+
+#### 로깅 퍼사드 vs 로거
+- Commons Logging , SLF4j 
+    - 실제 로깅을 하는 구현체가아니라 추상화 해놓은 API
+    - 프레임워크들은 로겅 퍼사드를 이용하여 개발함.
+    - 실제 구현체들을 교체 할 수 있도록..
+    - JUL, LOG4J2, LogBack 들이 실제 구현
+
+- Spring-JCL (스프링 5)
+    - Commons Logging > SLF4j 로 변경할수 있도록 제공 
+    - pom.xml 에서 exclusion 하지않아도됨
+
+#### 정리
+- Commons Logging > SLF4j > LogBack .. 
+- 스프링부트는 최종적으로 LogBack 을 사용한다.
+
+
+#### 스프링 부트 로깅 
+- 기본포맷
+    - [날짜] 로깅레벨 PID Thread class..
+- --debug (일부 핵심라이브러리만 디버깅모드)
+- --trace (모든 로깅을 디버그모드로 ..)
+- 컬러출력: spring.output.ansi.enabled
+- 파일출력: logging.file(로그파일) logging.path(디렉터리) 설정 
+- 10mb마다 아카이빙됨
+- 로그레벨: logging.level.packagename=LOGGING_LEVEL (패키지별로 로깅레벨 설정)
