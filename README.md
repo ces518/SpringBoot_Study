@@ -1100,3 +1100,35 @@ spring.profiles.include=proddb
 - 파일출력: logging.file(로그파일) logging.path(디렉터리) 설정 
 - 10mb마다 아카이빙됨
 - 로그레벨: logging.level.packagename=LOGGING_LEVEL (패키지별로 로깅레벨 설정)
+
+#### 커스텀 로그파일
+- Logback: logback.xml || logback-spring.xml(추천 스프링부트에서 지원하는 extension을 사용가능함.)
+- Log4j2: log4j2-spring.xml
+- JUL(비추): logging.properties
+- Logback extension
+    - 프로파일<spring profile="프로파일"> 특정 프로파일별로 설정이 가능함.
+    - Environment 프로퍼티
+    
+#### 로거를 log4j2로 변경하기
+- spring-boot-starter-web 에 포함된 spring-boot-starter-logging 의존성 제거
+- spring-boot-starter-log4j2의존성 추가
+```xml
+<!--   스프링부트 웹 의존성  -->
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+<!--     로거를 log4j2로 변경-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+```
