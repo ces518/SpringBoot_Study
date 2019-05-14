@@ -1,11 +1,13 @@
 package me.june;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.rule.OutputCapture;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -49,6 +51,10 @@ public class SampleControllerTest {
      */
     @MockBean
     SampleService sampleService;
+
+    // log 를 포함해서 콘솔에 찍히는것을 모두 캡쳐한다.
+    @Rule
+    public OutputCapture outputCapture = new OutputCapture();
 
     @Test
     public void hello() throws Exception {

@@ -1265,3 +1265,16 @@ public class SampleControllerTest {
 
 }
 ```
+
+# Spring Boot 활용 - 테스트 유틸
+- OutPutCapture
+- Junit의 Rule을 확장한것
+- public으로 선언해야한다. 
+- log를 포함해서 콘솔에 찍히는 모든것을 캡쳐한다.
+``java
+// log 를 포함해서 콘솔에 찍히는것을 모두 캡쳐한다.
+@Rule
+public OutputCapture outputCapture = new OutputCapture();
+// toString 으로 나오는 내용들을 assertion
+outputCapute.toString();
+``
