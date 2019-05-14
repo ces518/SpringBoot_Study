@@ -1132,3 +1132,136 @@ spring.profiles.include=proddb
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
 ```
+
+# SpringBoot 활용 - 테스트
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+```
+- spring-boot-test 의존성을 test scope로 추가한다
+    - junit
+    - mockito
+    - assertj
+    - hamcrest 
+    - .. 등 여러 테스트용 라이브러리들이 의존성으로 들어온다.
+
+- @SpringBootTest
+    - 빈설정파일은 어떻게 하나 ?
+        - @SpringBootApplication 애노테이션이 붙은 클래스를 찾아서 빈설정을 해준다.
+    
+    - webEnvironment
+        - SpringBootTest.WebEnvironment.MOCK
+            - 내장톰캣 구동되지않음
+            - servlet이 mocking되어 구동되며 mocking된 servlet과 통신을 하려면 MockMvc라는 객체를 통해야 한다.
+        - SpringBootTest.RANDOM_PORT
+            - 내장톰캣 구동
+            - TestRestTemplate 등 test용 webClient를 사용하여야한다.
+            
+    - @RunWith(SpringRunner.class) 와 함께 사용해야한다.
+    
+    - @AutoConfigureMockMvc
+        - MockMvc를 자동설정 해준다.
+        
+    - @MockBean
+        - ApplicationContext에 등록된 빈을 Test시 해당 빈으로 교체해준다 
+        - 빈을 mocking하여 슬라이싱 테스트가 가능하다.
+        - 모든 @Test마다 리셋된다.
+    
+    - WebTestClient
+        - spring 5에서 추가된 WebTestClient
+        - 비동기 테스트 클라이언트
+        - webflux 의존성이 존재해야지만 사용할 수 있다.
+    
+    - 슬라이싱 테스트
+        - 레이어별로 슬라이싱 테스트가 가능하다.
+        - 각 레이어별로 빈이 등록된다.
+        - @JsonTest jsonTest
+        - @WebMvcTest ControllerTest
+        - @WebFluxTest webFluxTest
+        - @DataJpaTest RepositoryTest
+        
+테스트에 앞서 컨트롤러와 서비스 코드 작성
+```java
+@RestController
+public class SampleController {
+
+    @Autowired
+    SampleService sampleService;
+
+    @GetMapping("/hello")
+    public String hello() {
+        return "hello" + sampleService.getName();
+    }
+}
+@Service
+public class SampleService {
+
+    public String getName() {
+        return "june";
+    }
+}
+```
+
+테스트 코드
+```java
+@RunWith(SpringRunner.class)
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+// mocking된 서블릿컨테이너가 구동됨
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// 테스트용 서블릿컨테이너가 random한 포트로 구동되며 테스트용 restTemplate 또는  test용 webClient를 사용해야한다.
+
+// MockMvc 를 자동으로 설정해준다.
+// MockMvc 를 Autowired를 통해 주입받을수있음.
+//@AutoConfigureMockMvc
+public class SampleControllerTest {
+
+//    @Autowired
+//    MockMvc mockMvc;
+
+    @Autowired
+    TestRestTemplate testRestTemplate;
+
+    /**
+     * spring 5에서 webflux부분에 추가된
+     * 비동기 테스트 클라이언트
+     * 사용하기 위해서는 webflux 관련 의존성이 존재해야한다.
+     */
+    @Autowired
+    WebTestClient webTestClient;
+
+    /**
+     * ApplicationContext에 등록된 빈을 테스트시 MockBean으로 등록한 객체로 교체해준다.
+     * 슬라이싱 테스트가 가능함.
+     */
+    @MockBean
+    SampleService sampleService;
+
+    @Test
+    public void hello() throws Exception {
+        /*
+            MockMvc
+        this.mockMvc.perform(get("/hello")) // GET /hello 로 mock 요청을 보낸다.
+                .andDo(print()) // print 를통해 요청과 응답에 대한 정보를 콘솔로 확인가능하다.
+                .andExpect(status().isOk()) // 응답코드가 200인지 검증
+                .andExpect(content().string("hellojune")); // 응답컨텐츠가 hellojune인지 검증
+
+         */
+
+        // sampleService의 리턴값을 mocking
+        when(sampleService.getName()).thenReturn("june2");
+
+        /*
+        String result = this.testRestTemplate.getForObject("/hello", String.class);
+        assertThat(result).isEqualTo("hellojune2");
+        */
+
+
+        this.webTestClient.get().uri("/hello").exchange().expectStatus().isOk()
+                .expectBody(String.class).isEqualTo("hellojune2");
+    }
+
+}
+```
