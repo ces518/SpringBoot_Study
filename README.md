@@ -1278,3 +1278,29 @@ public OutputCapture outputCapture = new OutputCapture();
 // toString 으로 나오는 내용들을 assertion
 outputCapute.toString();
 ``
+
+
+# Spring Boot 활용 - dev-tools
+- 캐시 설정을 개발환경에 맞게 변경해준다.
+- 기본적으로 대부분 캐시관련 설정을 disable 시켜준다.
+- 클래스패스에 존재하는 파일이 변경될때마다 자동응로 restart해준다.
+    - 직접 재시작보다 빠르다 
+        - 그 이유 ?
+            - 스프링부트는 클래스로더를 2개 사용한다.
+            - 1. BaseClassLoader (의존성을 읽어들임)
+            - 2. RestartClassLoader클래스로더 (애플리케이션 코드를 읽어들임)
+    - 릴로딩 보다 는 느리다.(JRebel같은것은 아니다.)
+    - 리스타트하고싶지않은 리소스 추가
+        - spring.devtools.restart.exclude
+    - 리스타트 기능 off
+        - spring.devtools.restart.enabled=false
+        
+- 라이브 릴로딩 브라우저까지 리프래시
+    - 브라우저 플러그인을 설치해야한다.
+    - 라이브 릴로딩 off 
+        - spring.devtools.liveload.enabled=false
+
+- 글로벌 설정
+    - ~/.spring-boot-devtools.properties
+
+
