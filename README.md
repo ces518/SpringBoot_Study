@@ -1304,3 +1304,21 @@ outputCapute.toString();
     - ~/.spring-boot-devtools.properties
 
 
+# Spring Boot - Web Mvc
+- Spring Boot MVC 자동설정
+    - Spring Boot 의 자동설정 에 의해 별다른 설정없이도 MVC 개발이 가능하다.
+    - spring.factories > WebMvcAutoConfiguration class (자동설정 파일)
+    
+* HiddenHttpMethodFilter 
+    - spring 3.0 부터 제공하는 filter
+    - post 방식의 요청 파라메터로 _method 라는 값에 PUT,DELETE 등을 보내면
+    - PUT , DELETE 등의 요청으로 매핑시켜주는 Filter 
+
+* PutFormContentFilter
+    - PUT , PATCH 도 contentType 이 form-data의 파라메터를 사용할수있도록 매핑해주는 Filter    
+
+- MVC 설정 확장 (기본설정 +@)
+    - @Configuration + WebMvcConfigurer
+
+- MVC 설정 (기본설정 덮어쓰기)
+    - @Configuration + @EnableWebMvc
