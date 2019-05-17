@@ -7,12 +7,18 @@ package me.june.mvc;
  * Time: 21:34
  **/
 
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
 
-    @GetMapping("/hello")
+//    @InitBinder
+//    public void initBinder (WebDataBinder webDataBinder) {
+//        webDataBinder.initDirectFieldAccess();
+//    }
+
+    @GetMapping("/hello2")
     public String hello() {
         return "hello";
     }
@@ -30,7 +36,7 @@ public class UserController {
      */
     @GetMapping("/users/create")
     @ResponseBody
-    public User createGet (@RequestBody User user) {
+    public User createGet (User user) {
         return user;
     }
 }

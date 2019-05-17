@@ -8,6 +8,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -55,13 +57,14 @@ public class UserControllerTest {
     }
 
     @Test
-    public void GET방식은_SETTER가필요한가() throws Exception {
-        String userJson = "{\"username\": \"june\", \"password\": \"12345\"}";
+    public void GET방식은_SETTER가필요없다() throws Exception {
+        MultiValueMap params = new LinkedMultiValueMap<>();
+        params.add("username","june");
+        params.add("password","12345");
 
-        this.mockMvc.perform(get("/users/create?user=june&password=12345")
+        this.mockMvc.perform(get("/users/create")
                 .contentType(MediaType.APPLICATION_JSON)
-                //.content(userJson)
-                )
+                .params(params))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("june")) // username 이 june으로 나올것이라 예상
