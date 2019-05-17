@@ -1322,3 +1322,21 @@ outputCapute.toString();
 
 - MVC 설정 (기본설정 덮어쓰기)
     - @Configuration + @EnableWebMvc
+
+
+# Spring Boot - HttpMessageConverter
+- 스프링 프레임워크에서 지원하는 인터페이스 
+- HTTP 응답 본문을 객체로 변환하거나 , 객체를 응답본문으로 변환할때 사용한다.
+- @RequestBody 또는 @ResponseBody와 함께 사용한다.
+- 어떤 요청을 받았는지 , 어떤 응답을 보내야하는지에 따라 사용하는 MessageConverter가 다르다.
+    - @ResponseBody를 사용하지않을경우 ViewResolver를 사용해서 view를 찾으려고 할것이다.
+    - 요청이 Json 이라면 , JsonMessageConverter를 사용해서 요청을 변환해준다.
+    - CompositeType이라면 기본으로 JsonMessageConverter를 사용한다.
+    - String 일경우 StringMessageConverter를 사용한다.
+    - @RestController 일경우 모든 핸들러 메서드에 @ResponseBody가 적용되어있는것과 동일하다.
+          
+
+- 스프링부트
+    - 뷰 리졸버 설정 제공
+    - HttpMessageConverterAutoConfiguration
+        - ContentsNegotiationViewResolver, BeanNameViewResolver
