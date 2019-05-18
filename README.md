@@ -1340,3 +1340,78 @@ outputCapute.toString();
     - 뷰 리졸버 설정 제공
     - HttpMessageConverterAutoConfiguration
         - ContentsNegotiationViewResolver, BeanNameViewResolver
+
+# Spring Boot - ViewResolver
+- 스프링부트가 제공하는 ContentsNegotiationViewResolver
+    - ContentsNegotiationViewResolver
+        - 요청의 accpet Header에 따라 응답이 달라진다. 
+        - accpet Header: 클라이언트가 원하는 응답의 형식.
+        - accpetHeader 를 제공하지않는 클라이언트도 존재하는데 그에 대비하여 foramt이라는 파라메터를 제공한다.
+        - /users?format=XML        
+
+CREATE USER 요청을 XML 로 응답받는 테스트코드이다.
+아래의 테스트코드는 406 에러가 발생한다.
+```java
+    @Test
+    public void createUser_accpetXML() throws Exception {
+
+        String userJson = "{\"username\": \"june\", \"password\": \"1234\"}";
+
+        this.mockMvc.perform(post("/users/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_XML)
+                .content(userJson))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(xpath("/User/username").string("june"))
+                .andExpect(xpath("/User/password").string("1234"));
+    }
+```
+- 406 에러가 발생한 이유 ?
+    - AcceptHeader를 요청과 함께 보내면 accpetHeader에 따라 MesageConverter를 다르게 사용하는데
+    - XML MessageConverter가 등록되지않아 발생한 에러이다.
+
+
+스프링부트의 자동설정을 살펴보자.
+
+```java
+@Configuration
+@ConditionalOnClass({HttpMessageConverter.class})
+@AutoConfigureAfter({GsonAutoConfiguration.class, JacksonAutoConfiguration.class, JsonbAutoConfiguration.class})
+@Import({JacksonHttpMessageConvertersConfiguration.class, GsonHttpMessageConvertersConfiguration.class, JsonbHttpMessageConvertersConfiguration.class})
+public class HttpMessageConvertersAutoConfiguration {
+    ...
+}
+@Configuration
+class JacksonHttpMessageConvertersConfiguration {
+    JacksonHttpMessageConvertersConfiguration() {
+    }
+
+    @Configuration
+    @ConditionalOnClass({XmlMapper.class})
+    @ConditionalOnBean({Jackson2ObjectMapperBuilder.class})
+    protected static class MappingJackson2XmlHttpMessageConverterConfiguration {
+        protected MappingJackson2XmlHttpMessageConverterConfiguration() {
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public MappingJackson2XmlHttpMessageConverter mappingJackson2XmlHttpMessageConverter(Jackson2ObjectMapperBuilder builder) {
+            return new MappingJackson2XmlHttpMessageConverter(builder.createXmlMapper(true).build());
+        }
+    }
+```
+JacksonHttpMessageConvertersConfiguration MessageConverter가 등록되는데 XmlMapper.class가 클래스패스에 존재하지않아서
+XML Converter가 등록되지않은것이다.
+
+- 해결방법
+    - pom.xml 에 아래의 의존성을 추가해준다.
+```xml
+<!--    XML MessageConverter 추가-->
+<dependency>
+    <groupId>com.fasterxml.jackson.dataformat</groupId>
+    <artifactId>jackson-dataformat-xml</artifactId>
+    <version>2.9.8</version>
+</dependency>
+```    
+

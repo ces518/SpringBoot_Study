@@ -57,6 +57,24 @@ public class UserControllerTest {
     }
 
     @Test
+    public void createUser_accpetXML() throws Exception {
+
+        String userJson = "{\"username\": \"june\", \"password\": \"1234\"}";
+
+        this.mockMvc.perform(post("/users/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_XML)
+                .content(userJson))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(xpath("/User/username").string("june"))
+                .andExpect(xpath("/User/password").string("1234"));
+//                .andExpect(jsonPath("$.username").value("june")) // username 이 june으로 나올것이라 예상
+//                .andExpect(jsonPath("$.password").value("1234")); // password가 1234로 나올것이라 예상
+    }
+
+
+    @Test
     public void GET방식은_SETTER가필요없다() throws Exception {
         MultiValueMap params = new LinkedMultiValueMap<>();
         params.add("username","june");
