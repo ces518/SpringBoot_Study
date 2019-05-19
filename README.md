@@ -1415,3 +1415,50 @@ XML Converter가 등록되지않은것이다.
 </dependency>
 ```    
 
+
+# Spring boot WebMvc - 정적 리소스 
+- 정적 리소스란 ? 
+    - resource가 이미 만들어져있고 그대로 보내면 되는 리소스를 망한다.
+    - js, html , css .. 등 
+ 
+- 정적 리소스 매핑 /**
+    - 아래의 4가지 경로에 존재하는 리소스들은 기본적으로 제공됨.
+    - classpath:/static
+    - classapth:/public
+    - classapth:/resources/
+    - classapth:/META-INF/resources/
+    - spring.mvc.static-path-pattern: 매핑설정 변경
+    - spring.mvc.static-locations: 리소스를 찾을 위치 변경가능
+
+- LastModified 헤더 정보를 가지고 304 응답을 보내기도한다.
+    - lastModified 정보를 기반으로 caching된 데이터를 응답함. 
+
+* ResourceHttpRequestHandler 가 요청을 처리한다.
+
+> http://localhost:8080/hello.html 로 요청을 보내면 
+> static,public,resources .. 하위에 hello.html이 존재할경우 해당파일을 응답으로 재공한다.
+ 
+
+properties를 사용하는 설정을 권장하지않는다.
+이유 ?
+    - 스프링부트의 기본 리소스 경로를 사용하지않기떼문..
+     
+권장하는 resourceHandler설정
+    - 기본 설정 + 확장  
+```java
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+
+    /**
+     * 스프링부트가 제공하는 기본 리소스 핸들러를 유지하면서
+     * 추가설정
+     * @param registry
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/m/**")
+                    .addResourceLocations("classpath:/m/") // 반드시 / 로 끝나야 매핑이된다.
+                    .setCachePeriod(30); // 단위는 초단위
+    }
+}
+```
