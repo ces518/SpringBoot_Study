@@ -1462,3 +1462,68 @@ public class WebConfig implements WebMvcConfigurer {
     }
 }
 ```
+
+# Spring boot WebMvc - WebJar
+- 스프링부트는 기본적으로 WebJar에 대한 매핑을 제공한다.
+- WebJar란 ? 
+    - 클라이언트에서 사용하는 js 라이브러리들 을 jar파일로 추가하여 사용할수있다.
+
+jQuery webJar 의존성추가
+```xml
+<!-- jQuery 사용 webJar 의존성 추가-->
+<dependency>
+    <groupId>org.webjars.bower</groupId>
+    <artifactId>jquery</artifactId>
+    <version>3.3.0</version>
+</dependency>
+```
+
+webJar사용 
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+</head>
+<body>
+    <h1>Hello.html</h1>
+    //version을 생략할 수 있다.
+<script src="/webjars/jquery/3.3.0/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+      document.write('hello WebJar !!');
+    })
+</script>
+</body>
+</html>
+```
+    
+- webjar locator core 를 의존성으로 추가하면 
+- webjar의 버전을 생략할 수 있다.
+> - resource Chaining 과 관련되어있음.
+```xml
+<dependency>
+    <groupId>org.webjars</groupId>
+    <artifactId>webjars-locator-core</artifactId>
+    <version>0.37</version>
+</dependency>
+```
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+</head>
+<body>
+    <h1>Hello.html</h1>
+<script src="/webjars/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+      document.write('hello WebJar !!');
+    })
+</script>
+</body>
+</html>
+```

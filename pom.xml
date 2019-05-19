@@ -86,6 +86,19 @@
             <version>2.9.8</version>
         </dependency>
 
+        <!-- jQuery 사용 webJar 의존성 추가-->
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>jquery</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.webjars/webjars-locator-core -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator-core</artifactId>
+            <version>0.37</version>
+        </dependency>
 
     </dependencies>
 
