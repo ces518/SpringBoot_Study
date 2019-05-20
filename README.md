@@ -1527,3 +1527,15 @@ webJar사용
 </body>
 </html>
 ```
+
+# Spring Boot WebMvc - index page , favicon
+
+웰컴페이지
+    - 기본 정적리소스 경로에서 부터 찾기시작한다.
+    - 1. index.html 을 찾는다.
+    - 2. index.{template} 을 찾는다.
+    - 3. 둘다 존재하지않는다면 에러페이지 를 리턴한다.
+
+파비콘
+    - favicon.ico
+    - https://favicon.io - 파비콘 생성
