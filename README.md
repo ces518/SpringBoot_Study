@@ -1539,3 +1539,26 @@ webJar사용
 파비콘
     - favicon.ico
     - https://favicon.io - 파비콘 생성
+
+# Spring Boot WebMvc - Thymeleaf
+- 템플릿엔진
+    - 뷰를 제공하는 목적
+    - 메일 템플릿용도
+    - 기타 등..
+    
+- 스프링부트가 자동설정을 제공하는 템플릿엔진
+    - Freemarker
+    - Groovy
+    - Thymeleaf
+    - Mustache
+
+- JSP 권장하지않는 이유 
+    - JAR 패키징할때는 동작하지않음
+    - Undertow는 JSP지원하지않음.
+        
+- Thymeleaf 사용하기
+    - https://thymeleaf.org
+    - 의존성 추가 : spring-boot-starter-thymeleaf
+    - /src/main/resources/template
+
+    
