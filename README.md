@@ -1598,3 +1598,13 @@ public void testWithHtmlUnit() throws Exception {
     assertThat(h1.getTextContent()).isEqualTo("june");
 }
 ```
+
+# Spring Boot WebMvc - ExceptionHandler
+- 애플리케이션을 실행하면 기본적인 에러핸들러가 등록되어있다.
+- 해당 에러핸들러에의해 에러페이지가 노출이됨.
+- BasicErrorController
+    - HTML 과 JSON 응답 지원 ..
+- CUSTOM 한 정적 에러페이지를 만들고싶을경우
+    - resources>error>{errorCode}.html 파일을 만들면된다.    
+   
+스프링 MVC 예외 처리 방법
