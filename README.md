@@ -1607,4 +1607,3 @@ public void testWithHtmlUnit() throws Exception {
 - CUSTOM 한 정적 에러페이지를 만들고싶을경우
     - resources>error>{errorCode}.html 파일을 만들면된다.    
    
-스프링 MVC 예외 처리 방법
