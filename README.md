@@ -1607,3 +1607,51 @@ public void testWithHtmlUnit() throws Exception {
 - CUSTOM 한 정적 에러페이지를 만들고싶을경우
     - resources>error>{errorCode}.html 파일을 만들면된다.    
    
+
+# Spring Boot WebMvc - HATEOAS
+- Hypermedia As The Engine Of Application State
+    - 서버: 현재 리소스와 연관된 링크 정보를 클라이언트에게 제공한다.
+    - 클라이언트: 연관된 링크정보를 바탕으로 리소스에 접근한다.
+    - 연관링크정보: 
+        - Relation
+        - Hypertext Reference
+    - spring-boot-starter-hateoas
+    
+- ObjectMapper 제공
+    - spring.jackson.*
+    - Jackson2ObjectMapperBuilder
+    
+- LinkDiscovers 제공
+    - 클라이언트에서 링크정보를 Rel 이름으로 찾을때 사용할 수 있는 XPath 확장클래스
+
+spring-boot-starter-hateoas 의존성 추가
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-hateoas</artifactId>
+</dependency>
+```
+
+SampleController 클래스 작성
+```java
+@RestController
+ public class SampleController {
+ 
+     @GetMapping("/hello")
+     public Resource hello () {
+         Hello hello = new Hello();
+         hello.setPrefix("Hello");
+         hello.setName("juneYoung");
+ 
+         /**
+          * spring-boot-start-hateoas 에서 제공하는 링크를 제공하는방법중하나
+          * 방법은 다양함..
+          * hateoas 패키지에서 제공하는 메서드들을 활용
+          */
+         Resource<Hello> helloResource = new Resource<>(hello);
+         helloResource.add(linkTo(methodOn(SampleController.class).hello()).withSelfRel());
+         return helloResource;
+     }
+}
+```    
+
