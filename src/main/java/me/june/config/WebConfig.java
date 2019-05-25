@@ -1,6 +1,7 @@
 package me.june.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -23,5 +24,11 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/m/**")
                     .addResourceLocations("classpath:/m/") // 반드시 / 로 끝나야 매핑이된다.
                     .setCachePeriod(30); // 단위는 초단위
+    }
+
+    /* CORS Global Setting */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/hello").allowedOrigins("http://localhost:18080");
     }
 }
