@@ -38,11 +38,12 @@ public class ThymeleafControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("helloThymeleaf"))
-                .andExpect(model().attribute("name",is("june")));
+                .andExpect(model().attribute("name", is("june")));
     }
 
     /**
      * 좀더 HTML에 특화된 테스트를 작성할 수 있다.
+     *
      * @throws Exception
      */
     @Test

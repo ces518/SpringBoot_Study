@@ -17,13 +17,14 @@ public class WebConfig implements WebMvcConfigurer {
     /**
      * 스프링부트가 제공하는 기본 리소스 핸들러를 유지하면서
      * 추가설정
+     *
      * @param registry
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/m/**")
-                    .addResourceLocations("classpath:/m/") // 반드시 / 로 끝나야 매핑이된다.
-                    .setCachePeriod(30); // 단위는 초단위
+                .addResourceLocations("classpath:/m/") // 반드시 / 로 끝나야 매핑이된다.
+                .setCachePeriod(30); // 단위는 초단위
     }
 
     /* CORS Global Setting */

@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class SimpleController {
 
     @GetMapping("/handle")
-    public String handler () {
+    public String handler() {
         throw new SimpleException();
     }
 
     @ExceptionHandler(SimpleException.class)
-    public ResponseEntity simpleHandler () {
+    public ResponseEntity simpleHandler() {
         AppError appError = new AppError();
         appError.setMessage("error");
         appError.setReason("IDK");

@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * 애플리케이션 리스너 등록
- *
  */
 @Component
 //public class SimpleListener implements ApplicationListener<ApplicationStartingEvent> {
@@ -45,7 +44,7 @@ public class SimpleListener implements ApplicationListener<ApplicationStartedEve
         System.out.println("================= using ConfigurationProperties =================");
         System.out.println(String.format("name = {%s}", juneYoungProperties.getName()));
         System.out.println(String.format("fullName = {%s}", juneYoungProperties.getFullName()));
-        System.out.println(String.format("seound = {%s}",juneYoungProperties.getSecound()));
+        System.out.println(String.format("seound = {%s}", juneYoungProperties.getSecound()));
 
         System.out.println("===================== profile Test =====================");
         System.out.println(hello);

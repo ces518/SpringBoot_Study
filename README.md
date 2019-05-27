@@ -1696,3 +1696,32 @@ public class WebConfig implements WebMvcConfigurer {
     }
 }
 ```
+
+# Spring Boot - 인메모리 데이터베이스
+- H2 (추천)
+- HSQL
+- Derby
+
+Spring-JDBC 가 클래스패스에 존재하면 자동설정되는 빈
+- DataSource
+- JdbcTemplate
+- HikariCP 도 같이 의존성으로 들어온다.
+
+DataSource 설정을 하지않으면, 스프링부트는 자동적으로 인메모리 데이터베이스 설정을해준다.
+
+인메모리 데이터베이스 기본 연결정보
+- URL: "testdb"
+- username: "sa"
+- password: ""
+
+
+H2Console 사용방법
+- spring-boot-devtools를 의존성으로 추가 또는
+- spring.h2.console.enable=true 만 추가 
+- /h2-console 로 접속가능 (PATH 변경가능)
+- url mem:testdb 인지 확인할것.
+
+JDBCTemplate 을 사용시 이점
+- Exception처리가 잘되어있음
+- Exception이 계층구조로 처리되어있어 사용하기 좋다. DataAccessException ... 
+

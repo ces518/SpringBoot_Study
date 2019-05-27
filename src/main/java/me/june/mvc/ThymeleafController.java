@@ -15,7 +15,7 @@ public class ThymeleafController {
 
     @GetMapping("/helloThymeleaf")
     public String helloThymeLeaf(Model model) {
-        model.addAttribute("name","june");
+        model.addAttribute("name", "june");
         return "helloThymeleaf";
     }
 }

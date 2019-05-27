@@ -17,7 +17,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 //@EnableAutoConfiguration
 public class Applicaiton {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 //        SpringApplication application = new SpringApplication(Applicaiton.class);
 //        application.setWebApplicationType(WebApplicationType.NONE);
 //        application.run(args);
@@ -55,7 +55,6 @@ public class Applicaiton {
 //        tomcat.start();
 //
 //        tomcat.getServer().await();
-
 
 
     }

@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestPropertySource(
 //        properties = "me.june.name=JuneZero"
         locations = "classpath:/test.properties"
-        )
+)
 @SpringBootTest(classes = Applicaiton.class, properties = "me.june.name=June0")
 public class TestApplication {
 

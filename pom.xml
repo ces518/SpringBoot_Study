@@ -8,9 +8,9 @@
     <artifactId>spring-boot-started</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-<!--    스프링 부트의 가장 핵심적인 의존성
-        MAVEN을 활용하여 계층구조로 생성이 가능하다.
--->
+    <!--    스프링 부트의 가장 핵심적인 의존성
+            MAVEN을 활용하여 계층구조로 생성이 가능하다.
+    -->
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -18,16 +18,16 @@
         <version>2.1.4.RELEASE</version>
     </parent>
 
-<!--    <properties>-->
-<!--        <spring.version>5.0.7.RELEASE</spring.version>-->
-<!--    </properties>-->
+    <!--    <properties>-->
+    <!--        <spring.version>5.0.7.RELEASE</spring.version>-->
+    <!--    </properties>-->
 
-<!--   스프링부트 웹 의존성  -->
+    <!--   스프링부트 웹 의존성  -->
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-<!--           톰캣을 기본 의존성에서 제거  -->
+            <!--           톰캣을 기본 의존성에서 제거  -->
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
@@ -40,24 +40,24 @@
             </exclusions>
         </dependency>
 
-<!--     로거를 log4j2로 변경-->
+        <!--     로거를 log4j2로 변경-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
 
-<!--        언더토우 내장 서버 로 의존성 추가 -->
+        <!--        언더토우 내장 서버 로 의존성 추가 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-undertow</artifactId>
         </dependency>
 
-<!--    스프링부트 starter jpa -->
+        <!--    스프링부트 starter jpa -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-<!--   커스텀한 자동설정 -->
+        <!--   커스텀한 자동설정 -->
         <dependency>
             <groupId>me.june</groupId>
             <artifactId>june-spring-boot-starter</artifactId>
@@ -79,7 +79,7 @@
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
-<!--    XML MessageConverter 추가-->
+        <!--    XML MessageConverter 추가-->
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
@@ -100,13 +100,13 @@
             <version>0.37</version>
         </dependency>
 
-<!--      ThymeLeaf 의존성 -->
+        <!--      ThymeLeaf 의존성 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-<!--        HTML Unit 의존성 -->
+        <!--        HTML Unit 의존성 -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>htmlunit-driver</artifactId>
@@ -117,7 +117,8 @@
             <groupId>net.sourceforge.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
             <scope>test</scope>
-        </dependency><dependency>
+        </dependency>
+        <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>htmlunit-driver</artifactId>
             <scope>test</scope>
@@ -130,7 +131,7 @@
         </dependency>
     </dependencies>
 
-<!--   스프링부트 메이븐 플러그인  -->
+    <!--   스프링부트 메이븐 플러그인  -->
     <build>
         <plugins>
             <plugin>

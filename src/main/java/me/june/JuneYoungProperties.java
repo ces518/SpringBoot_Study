@@ -26,7 +26,7 @@ public class JuneYoungProperties {
 
     private String fullName;
 
-//    @DurationUnit(ChronoUnit.SECONDS)
+    //    @DurationUnit(ChronoUnit.SECONDS)
     private Duration secound = Duration.ofSeconds(30);
 
     public Duration getSecound() {

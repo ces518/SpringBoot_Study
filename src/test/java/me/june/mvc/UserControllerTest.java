@@ -48,8 +48,8 @@ public class UserControllerTest {
         String userJson = "{\"username\": \"june\", \"password\": \"1234\"}";
 
         this.mockMvc.perform(post("/users/create")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(userJson))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userJson))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("june")) // username 이 june으로 나올것이라 예상
@@ -77,8 +77,8 @@ public class UserControllerTest {
     @Test
     public void GET방식은_SETTER가필요없다() throws Exception {
         MultiValueMap params = new LinkedMultiValueMap<>();
-        params.add("username","june");
-        params.add("password","12345");
+        params.add("username", "june");
+        params.add("password", "12345");
 
         this.mockMvc.perform(get("/users/create")
                 .contentType(MediaType.APPLICATION_JSON)

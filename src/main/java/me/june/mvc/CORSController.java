@@ -16,7 +16,7 @@ public class CORSController {
     /* 허용할 오리진 설정 */
     @CrossOrigin(origins = "http://localhost:18080")
     @GetMapping("/helloCors")
-    public String helloCors () {
+    public String helloCors() {
         return "helloCors";
     }
 }
