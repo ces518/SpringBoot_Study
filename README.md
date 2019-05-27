@@ -1725,3 +1725,46 @@ JDBCTemplate 을 사용시 이점
 - Exception처리가 잘되어있음
 - Exception이 계층구조로 처리되어있어 사용하기 좋다. DataAccessException ... 
 
+
+# Spring Boot - DBCP, MYSQL
+- DBCP ?
+    - DataBaseConnectionPool 
+    - Connection을 생성할때 비용이 크기때문에 미리 커넥션을 여러개 생성해두고 사용하는개념
+    - 최대 갯수 ? 최대 웨이팅시간 .. 등등 상세한 설정이 가능함.
+    
+지원하는 DBCP
+- 각 DBCP의 기본값 등 설정들은 공식문서 참조..
+1. HikariCP (2.x 이상)
+2. TomcatCP (1.5.x)
+3. CommonsDBCP2
+
+
+* ConnectionPool 의 개수가 많다고 좋은것일까 ?
+- Connection 풀의 개수도 잘 결정해야함
+- Connection 풀의 개수가 많다고 좋은것이아님.
+- 실제 요청을 처리할수 있는 커넥션의 수는 CPU코어의 개수와 동일하다.
+
+- MYSQL
+    - MYSQL 사용시 커넥터 의존성 추가
+    - DataSource 구현체
+```xml
+<!--    MySQL 커넥터 의존성 추가 -->
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+</dependency>
+```
+
+- MYSQL Docker 
+- docker run -p 3306:3306 --name mysql_test -e MYSQL_ROOT_PASSWORD=1 -e MYSQL_DATABASE=springboot -e MYSQL_USER=june -e MYSQL_PASSWORD=java -d mysql
+- -p 3306:3306 => 도커 컨테이너 내부의 3306포트와 로컬 3306포트를 바인딩
+- --name mysql_test 이미지의 alias로 mysql_test 로 지정
+- -e MYSQL_ROOT_PASSWORD=1 루트패스워드를 1로 설정
+- -e MYSQL_DATABASE=springboot springboot 데이터베이스 를 생성
+- -d mysql 데몬(백그라운드)으로 실행 
+
+MYSQL 특정버전 이상 사용시 SSL 사용 경고가뜨게됨
+- Best 는 trustStore사용
+
+8.x 이상에서는 PublicKeyRetrieval is not allowed 에러 발생
+- 8.x 는 allowPublicKeyRetrieval=true

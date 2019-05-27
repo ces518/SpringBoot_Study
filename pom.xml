@@ -129,6 +129,11 @@
             <artifactId>htmlunit</artifactId>
             <scope>test</scope>
         </dependency>
+<!--    mysql 의존성 추가 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
     </dependencies>
 
     <!--   스프링부트 메이븐 플러그인  -->
