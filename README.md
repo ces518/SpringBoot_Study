@@ -1784,3 +1784,25 @@ POSTGRESQL 의존성 추가하기
 
 Docker로 postgresql 데이터베이스 실행
 - docker run -p 5432:5432 -e POSTGRES_PASSWORD=java -e POSTGRES_USER=june -e POSTGRES_DB=springboot --name postgres_boot postgres
+
+# Spring Boot - Spring-data-jpa 연동
+ORM (Object - Relation - Mapping)
+- 객체와 릴레이션을 매핑할때 생기는 패러다임 불일치는 해결하는 프레임워크
+- JPA: ORM 을 위한 자바표준
+
+JPA 의존성추가
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+```
+
+
+스프링 데이터 JPA
+- Repository 빈 자동등록
+- 쿼리메서드 자동 구현
+- @EnableJpaRepositories (스프링부트 자동설정)
+
+
+
