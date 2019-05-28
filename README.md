@@ -1805,4 +1805,7 @@ JPA 의존성추가
 - @EnableJpaRepositories (스프링부트 자동설정)
 
 
+@DataJpaTest
+- 슬라이싱 테스트
+- 슬라이싱 테스트시에는 인메모리 데이터베이스가 필요함.
 
