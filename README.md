@@ -1768,3 +1768,19 @@ MYSQL 특정버전 이상 사용시 SSL 사용 경고가뜨게됨
 
 8.x 이상에서는 PublicKeyRetrieval is not allowed 에러 발생
 - 8.x 는 allowPublicKeyRetrieval=true
+
+# Spring Boot - PostgreSQL
+- 스프링부트에서 postgreSQL 자동설정을 제공한다.
+
+POSTGRESQL 의존성 추가하기
+
+```xml
+<!--        postgreSQL 의존성 추가-->
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+</dependency>
+```
+
+Docker로 postgresql 데이터베이스 실행
+- docker run -p 5432:5432 -e POSTGRES_PASSWORD=java -e POSTGRES_USER=june -e POSTGRES_DB=springboot --name postgres_boot postgres
