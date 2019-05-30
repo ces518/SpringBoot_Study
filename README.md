@@ -1827,3 +1827,21 @@ SQL 스크립트를 활용한 데이터베이스 스키마 초기화
 - data.sql or data-${platform}.sql
 - ${platform} 값은 spring.datasource.platform 의 값으로 설정이 가능하다.
 
+# Spring Boot 데이터베이스 마이그레이션 툴
+Flayway
+
+DBSchema || DATAVersion 관리도 가능하다. (SQL 파일로 관리함.)
+
+의존성 추가
+```xml
+<dependency>
+    <groupId>org.flywaydb</groupId>
+    <artifactId>flyway-core</artifactId>
+</dependency>
+```
+
+사용방법 
+ - resources>db>migration 폴더생성
+ - V1__init.sql 
+ - 컬럼이 추가되거나 , 등등 상황이 발생할경우, "절대 기존SQL파일을 건들여선안된다."
+ - 반드시 새로운 SQL파일 생성후 추가사항 작성
