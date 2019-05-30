@@ -1809,3 +1809,21 @@ JPA 의존성추가
 - 슬라이싱 테스트
 - 슬라이싱 테스트시에는 인메모리 데이터베이스가 필요함.
 
+# Spring Boot 데이터베이스 초기화 
+
+JPA를 활용한 데이터베이스 스키마 초기화 
+- spring.jpa.hibernate.ddl-auto
+    - create: (생성)
+    - create-drop: (생성-삭제)
+    - update: 스키마와 엔티티간의 추가된것만 변경 (기존 데이터 유지) * 개발시 추천
+    - validate: 스키마와 엔티티간의 싱크만 확인 (운영시)
+    - none: 생성하지않음
+- spring.jpa.generate-ddl=true 로 설정해주어야 동작한다.
+
+* spring.jpa.show-sql=true 옵션을 주게되면, SQL 이 콘솔에 출력됨.
+
+SQL 스크립트를 활용한 데이터베이스 스키마 초기화
+- schema.sql or schema-${platform}.sql
+- data.sql or data-${platform}.sql
+- ${platform} 값은 spring.datasource.platform 의 값으로 설정이 가능하다.
+
