@@ -1844,4 +1844,37 @@ DBSchema || DATAVersion 관리도 가능하다. (SQL 파일로 관리함.)
  - resources>db>migration 폴더생성
  - V1__init.sql 
  - 컬럼이 추가되거나 , 등등 상황이 발생할경우, "절대 기존SQL파일을 건들여선안된다."
- - 반드시 새로운 SQL파일 생성후 추가사항 작성
+ - 반드시 새로운 SQL파일 생성후 추가사항 작
+
+
+# Spring Boot Redis
+- 캐시, 메시지 브로커, 키/벨류 스토어등으로 사용가능하다.
+
+의존성 추가
+- spring-boot-starter-data-redis
+
+Redis 설치 및 실행 (도커)
+- docker run -p 6379:6379 --name redis_boot -d redis
+- docker exec -i -t redis_boot redis-cli
+
+Spring data redis
+- StringRedisTemplate (String에 특) or Redis Template
+- extends CrudRepository
+
+Redis 테스트 코드
+```java
+@Component
+public class RedisRunner implements ApplicationRunner {
+
+    @Autowired
+    StringRedisTemplate redisTemplate;
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        ValueOperations<String, String> values = redisTemplate.opsForValue();
+        values.set("june","young");
+        values.set("springboot","2.1.5");
+        values.set("hello","world");
+    }
+}
+```
