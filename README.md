@@ -1969,3 +1969,18 @@ Neo4j 도커 실행
 - 기본 password: neo4j
 
 MongoDB와 마찬가지로 Repository를 생성해서 사용할 수 도있다.
+
+
+# Spring Boot - Database 정리
+- JDBC만 있으면 JDBCTemplate을 자동으로 빈으로 등록해준다.
+- DataSource커스터마이징 properties파일로 커스터마이징 가능.
+- 내장 데이터베이스는 H2 DB 를 추천
+- 아무런 설정을 하지않아도 바로 사용이 가능하다.
+
+- HikariCP 가 기본 커넥션풀로 제공 (2.x)
+- MYSQL, Postgres 도 자동설정을 제공함.
+
+- Spring-data-xxx 를 제공하는 프로젝트들은 
+- xxxTemplate 뿐만아니라 xxxRepository를 지원하기때문에 손쉽게 사용이 가능하다.
+ 
+
