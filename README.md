@@ -1878,3 +1878,70 @@ public class RedisRunner implements ApplicationRunner {
     }
 }
 ```
+
+
+# Spring Boot MongoDB
+- MongoDB는 JSON기반의 도큐먼트 데이터베이스이다.
+- Spring WebFlux를 사용하는경우에는 reactive mongo를 사용하는것이 좋음.
+
+의존성 추가
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-mongodb</artifactId>
+</dependency>
+```
+
+MongoDB 도커 실행
+- docker run -p 27017:27017 --name mongo_boot -d mongo 
+- docker exec -i -t mongo_boot bash
+- mongo
+
+```
+db // database 조회
+use test // test 사용
+db.accounts.find({}) // accounts컬렉션 조회
+```
+
+스프링 데이터 MongoDB
+- MongoTemplate, Repository는 springboot가 기본제공 
+- MongoTemplate
+- MongoRepository
+- 내장형MongoDB 
+    - de.flapdoodle.emtbed:de.flapdoodle.embed.mongo
+- @DataMongoTest 
+
+
+MongoDB 테스트용 내장서버 의존성 추가 
+```xml
+<dependency>
+    <groupId>de.flapdoodle.embed</groupId>
+    <artifactId>de.flapdoodle.embed.mongo</artifactId>
+    <scope>test</scope>
+</dependency>
+```
+
+MongoDB 슬라이싱테스트 
+```java
+@RunWith(SpringRunner.class)
+@DataMongoTest
+public class AccountRepositoryTest {
+
+    @Autowired
+    AccountRepository accountRepository;
+
+    @Test
+    public void findByUsername() {
+        Account account = new Account();
+        account.setId("pjy3");
+        account.setUsername("parkjune0");
+
+        accountRepository.save(account);
+
+        Account byUsername = accountRepository.findByUsername(account.getUsername());
+
+        assertThat(byUsername).isNotNull();
+        assertThat(byUsername.getUsername()).isEqualTo("parkjune0");
+    }
+}
+```
