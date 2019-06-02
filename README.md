@@ -1945,3 +1945,27 @@ public class AccountRepositoryTest {
     }
 }
 ```
+
+
+# Spring Boot - Neo4j
+- 노드간의 연관 관계를 영속화하는데 유리한 그래프 데이터베이스이다.
+
+- 최신버전에서는 하위 호환성이 떨어진다.
+- Neo4jTemplate, Neo4jOperations 등의 빈이 없어졌다.
+
+의존성 추가
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-neo4j</artifactId>
+</dependency>
+```
+
+Neo4j 도커 실행
+- 최신버전에서는 포트를 2개 바인딩해주어야함 하나는 bolt 용  
+- docker run -p 7474:7474 -p 7687:7687 -d --name neo4j_boot neo4j
+- WebUI을 제공한다.
+- localhost:7474 
+- 기본 password: neo4j
+
+MongoDB와 마찬가지로 Repository를 생성해서 사용할 수 도있다.
