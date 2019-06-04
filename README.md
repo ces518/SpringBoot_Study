@@ -2051,3 +2051,65 @@ public class HomeControllerTest {
     }
 }
 ```
+
+# Spring boot - Security 커스터마이징
+- 1. 웹 시큐리티 설정
+```java
+@Configuration
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/", "/hello").permitAll()
+                .anyRequest().authenticated()
+                .and()
+            .formLogin()
+                .and()
+            .httpBasic();
+    }
+}
+```
+
+- 2. UserDetailsService 구현
+일반적으로 서비스 계층에 UserDetailsService 인터페이스를 구현한다.
+```java
+@Service
+public class AccountService implements UserDetailsService {
+
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public Account createAccount (String username, String password) {
+        Account account = new Account();
+        account.setUsername(username);
+        account.setPassword(passwordEncoder.encode(password));
+        return accountRepository.save(account);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<Account> byUsername = accountRepository.findByUsername(username);
+        Account account = byUsername.orElseThrow(() -> new UsernameNotFoundException(username));
+        return new User(account.getUsername(), account.getPassword(), authorities());
+    }
+
+    private Collection<? extends GrantedAuthority> authorities() {
+        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+}
+```
+
+- 3. PasswordEncoder 설정 및 사용 
+스프링 시큐리티 최신버전 기준으로 PasswordEncoder 가 등록되어 있지않으면 인코딩 에러가 발생한다.
+{id} password 형태의 포맷으로 되어있지않은경우 예외가 발생한다.
+스프링 시큐리티에서 권장하는 PasswordEncoder를 사용해야함.
+```java
+@Bean
+public PasswordEncoder passwordEncoder () {
+    return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+}
+```
