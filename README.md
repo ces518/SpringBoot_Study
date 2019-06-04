@@ -1984,3 +1984,70 @@ MongoDB와 마찬가지로 Repository를 생성해서 사용할 수 도있다.
 - xxxTemplate 뿐만아니라 xxxRepository를 지원하기때문에 손쉽게 사용이 가능하다.
  
 
+
+# Spring boot - Security 
+
+의존성 추가 
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+```
+
+스프링 시큐리티
+- 웹시큐리티
+- 메소드 시큐리티
+- 다양한 인증 방법 지원
+    - LDAP, 폼 인증, Basic, OAuth
+
+스프링부트 시큐리티 자동 설정
+- SecurityAutoConfiguration
+    - EventPublisher를 등록해준다. , Handler를 등록해서 유저의 상태를 변경하는등 제어가 가능하다.
+    - WebSecurityConfigurerAdapter 의 기본 설정을 따른다.
+        -  WebSecurityConfigurerAdapter.class 를 상속받아서 자바기반설정을 많이 사용함.
+- UserDetailsServiceAutoConfiguration
+    - AuthenticationManager.class, AuthenticationProvider.class, UserDetailsService 가 없을경우 InMemoryUserDetails를 생성해준다.(랜덤유저 생성)
+- spring-boot-starter-security
+- 기본 유저네임은 User
+- 패스워드는 매번 새로이 설정
+- spring.security.user.name
+- spring.security.user.password
+
+* 스프링부트가 Spring-Security 에 대한 자동설정을 제공해주는것이 그리 많지않음..
+
+기본 설정 
+- 모든 요청에 대한 인증을 필요로하게됨
+- Accept-Header에 아무런 정보를 제공하지 않을경우 시큐리티는 BasicAuthentication 을 요구한다.
+- Accept-Header에 따라 달라진다.
+- 일반적인 요청의 경우 Accept-Header에 의해 (text/html) 폼인증으로 넘어가게됨.
+
+
+시큐리티적용 테스트를 위한 의존성 추가
+```xml
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-test</artifactId>
+    <version>${spring-security.version}</version>
+</dependency>
+```
+
+```java
+@RunWith(SpringRunner.class)
+@WebMvcTest(HomeController.class)
+public class HomeControllerTest {
+
+    @Autowired
+    MockMvc mockMvc;
+
+    @Test
+    @WithMockUser // 유저를 Mocking해서  테스트를 진행한다.
+    public void hello () throws Exception {
+        this.mockMvc.perform(get("/hello")
+                    .accept(MediaType.TEXT_HTML))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("hello"));
+    }
+}
+```
