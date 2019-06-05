@@ -2113,3 +2113,93 @@ public PasswordEncoder passwordEncoder () {
     return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 }
 ```
+
+# Spring Boot - RESTClient
+- 스프링부트가 제공해주는 자동 설정 빈은 RestTemplate, WebClient를 직접 제공해주는것이 아니라
+- RestTemplateBuilder, WebClient.Builder를 빈으로 등록해준다.
+- Builder를 주입받아서, RestTemplate or WebClinet를 사용해야한다. 
+
+- RestTemplate
+    - Blocking I/O 기반의 동기화 API
+    - RestTemplateAutoConfiguration
+    - 프로젝트에 spring-web 모듈이 존재한다면, RestTemplateBuilder를 빈으로 등록해준다.
+
+```java
+@Component
+public class RestRunner implements ApplicationRunner {
+
+    @Autowired
+    RestTemplateBuilder restTemplateBuilder;
+
+    /*
+    비동기 기반 이기때문에 해당 요청 라인의 응답이 오기까지 다음라인으로 진행되지않음. 
+    * */
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        // hello 
+        String hello = restTemplate.getForObject("http://localhost:8080/hello", String.class);
+        System.out.println(hello);
+
+        // sample
+        String sample = restTemplate.getForObject("http://localhost:8080/sample", String.class);
+        System.out.println(sample);
+
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
+    }
+}
+```
+
+- WebClient
+    - Non-Blocking I/O 기반의 비동기 API
+    - WebClientAutoConfiguration
+    - 프로젝트에 spring-webflux 모듈이 존재한다면, WebClient.Builder를 빈으로 등록해준다.
+
+```java
+@Component
+public class RestRunner implements ApplicationRunner {
+
+    @Autowired
+    WebClient.Builder builder;
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        WebClient web = builder.build();
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        // hello
+        /* Stream API 인 Mono임 subscribe 하기전까진 진행되지않는다. */
+        Mono<String> stringMono = web.get().uri("http://localhost:8080/hello")
+                .retrieve().bodyToMono(String.class);
+
+        /* subscribe 해야지만 해당 요청을 실행함. Non-Blocking*/
+        stringMono.subscribe(s -> {
+            if (stopWatch.isRunning()) {
+                stopWatch.stop();
+            }
+            System.out.println(stopWatch.prettyPrint());
+            stopWatch.start();
+        });
+
+        // sample
+        Mono<String> sampleMono = web.get().uri("http://localhost:8080/sample").retrieve().bodyToMono(String.class);
+        sampleMono.subscribe(s -> {
+            if (stopWatch.isRunning()) {
+                stopWatch.stop();
+            }
+            System.out.println(stopWatch.prettyPrint());
+            stopWatch.start();
+        });
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
+    }
+}
+
+```
