@@ -2203,3 +2203,62 @@ public class RestRunner implements ApplicationRunner {
 }
 
 ```
+
+# Spring boot - RestClient 커스터마이징
+
+- RestTemplate 
+    - default: java.net.HttpURLConnection 을 사용한다.
+    - 커스터마이징
+        - 로컬 커스터마이징
+        - 글로벌 커스터마이징
+            - RestTemplateCustomizer
+            - 빈을 재정의
+            
+- WebClient
+    - default: Recator Netty의 Http 클라이언트를 사용한다.
+    - 커스터마이징
+        - 로컬 커스터마이징
+        - 글로벌 커스터마이징
+            - WebClientCustomizer
+            - 빈을 재정의
+
+
+로컬 커스터마이징
+```java
+@Component
+public class RestRunner implements ApplicationRunner {
+
+    @Autowired
+    WebClient.Builder builder;
+
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        WebClient web = builder
+                        .baseUrl("http://localhost:8080")
+                        .build();
+    }
+}
+```
+
+글로벌 커스터마이징
+```java
+@SpringBootApplication
+public class SpringBootRestClientApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringBootRestClientApplication.class, args);
+    }
+
+    @Bean
+    public WebClientCustomizer webClientCustomizer () {
+        return new WebClientCustomizer() {
+            @Override
+            public void customize(WebClient.Builder webClientBuilder) {
+                webClientBuilder.baseUrl("http://localhost:8080");
+            }
+        };
+    }
+
+}
+```       
