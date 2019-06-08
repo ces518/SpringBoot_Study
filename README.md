@@ -2285,3 +2285,15 @@ public class SpringBootRestClientApplication {
 - HATEOAS 형태로 제공됨.
 - HTTP로 접근하는경우 공개되는 정보가 제한적. (health, info 만 공개) [기본 설정]
 
+# Spring boot - JMX
+- JConsole
+- jconsole 명령어로 접근이 가능함.
+- CPU, Heap, Thread .. 등의 정보를 제공 함
+* shutdown 이 공개 되어 있어서 shutdown이 가능하므로 주의 
+
+- VisualVM
+- JConsole과 거의 유사하지만, 플러그인이 존재해서 좀 더 편리하다.
+- Java10 부터는 내장되어 있지않아 추가 설치가 필요함.
+
+* 반드시 시큐리티 설정을 해서 사용할것.
+- 시스템 정보가 노출이 될 가능성이있다.
