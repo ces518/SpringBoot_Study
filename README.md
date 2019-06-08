@@ -2297,3 +2297,35 @@ public class SpringBootRestClientApplication {
 
 * 반드시 시큐리티 설정을 해서 사용할것.
 - 시스템 정보가 노출이 될 가능성이있다.
+
+
+# Spring boot - ADMIN
+- 스프링이 아닌 다른사용자가 제공하는 오픈소스 프로젝트
+
+
+어드민 서버설정
+
+의존성 추가
+```xml
+<dependency>
+    <groupId>de.codecentric</groupId>
+    <artifactId>spring-boot-admin-starter-server</artifactId>
+    <version>2.0.1</version>
+</dependency>
+```
+@EnableAdminServer
+
+
+클라이언트 서버 설정
+```xml
+<dependency>
+    <groupId>de.codecentric</groupId>
+    <artifactId>spring-boot-admin-starter-client</artifactId>
+    <version>2.0.1</version>
+</dependency>
+```
+
+spring.boot.admin.clinet.url=http://localhost:8080
+management.endpoints.web.exposure.include=*
+
+- Actuator 나 JMX보다 좀 더 편리하게 관리할수 있음.
