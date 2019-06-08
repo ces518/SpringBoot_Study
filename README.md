@@ -2261,4 +2261,27 @@ public class SpringBootRestClientApplication {
     }
 
 }
-```       
+```
+
+# Spring boot - 운영 
+- Spring boot Actuator 
+- 운영중에 유용한 기능을 제공한다.
+- 앤드포인트와 메트릭스, 그 데이터를 활용하는 모니터링 기능 제공 
+
+
+- 특정 메모리 % 를 넘어서거나 특정 CPU % 를 넘어설 경우 알림 기능 도 가능함.
+- shutdown을 제외한 다른 앤드포인트는 모두 활성화 상
+
+의존성 추가
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+기본 URL
+- http://localhost:8080/actuator
+- HATEOAS 형태로 제공됨.
+- HTTP로 접근하는경우 공개되는 정보가 제한적. (health, info 만 공개) [기본 설정]
+
